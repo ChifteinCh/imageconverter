@@ -52,23 +52,6 @@ def image_processing(image, new_image, blueprint__, lockers, xy_shifts):
                 with lockers[1]:
                     blueprint__.add_tile(tiles[new_pixel_rgb], [x + xy_shifts[0], y + xy_shifts[1]])
 
-
-# def image_processing(image, new_image, blueprint__, lockers, entity_number, x_start_end, y_start_end,):
-#     for x in range(x_start_end[0], x_start_end[1]):
-#         for y in range(y_start_end[0], y_start_end[1]):
-#             with lockers[0]:
-#                 pixel_rgb = image.getpixel((x, y))
-#             new_pixel_rgb = nearest_color(entities | tiles, pixel_rgb)
-#             new_image.putpixel((x, y), new_pixel_rgb)
-#             if new_pixel_rgb in list(entities.keys()) and entities[new_pixel_rgb] != 'blank':
-#                 with lockers[1]:
-#                     entity_number += 1
-#                     blueprint__.add_entity(i, entities[new_pixel_rgb], [x, y])
-#             elif new_pixel_rgb in list(tiles.keys()):
-#                 with lockers[2]:
-#                     blueprint__.add_tile(tiles[new_pixel_rgb], [x, y])
-
-
 def nearest_color(colors, current_color):
     return min(colors, key=lambda subject: sum((s - q) ** 2 for s, q in zip(subject, current_color)))
 
@@ -151,7 +134,7 @@ timing_file = open('timing_thread.txt', 'w')
 timing_file.write('Initialization ends in ' + repr(time.time() - start_time) + '\n')
 start_time = time.time()
 
-img = Image.open('downsized.jpg')
+img = Image.open('downsized.png')
 new_img = Image.new('RGB', img.size)
 cropped_img = image_cropping(img)
 cropped_new_img = image_cropping(new_img)
@@ -173,16 +156,6 @@ for i in range(4):
 
 for thread in thread_list:
     thread.join()
-# for x in range(img.size[0]):
-#     for y in range(img.size[1]):
-#         pixel_rgb = img.getpixel((x, y))
-#         new_pixel_rgb = nearest_color(entities | tiles, pixel_rgb)
-#         new_img.putpixel((x, y), new_pixel_rgb)
-#         if new_pixel_rgb in list(entities.keys()) and entities[new_pixel_rgb] != 'blank':
-#             i += 1
-#             blueprint_.add_entity(i, entities[new_pixel_rgb], [x, y])
-#         elif new_pixel_rgb in list(tiles.keys()):
-#             blueprint_.add_tile(tiles[new_pixel_rgb], [x, y])
 
 timing_file.write('Image processing ends in ' + repr(time.time() - start_time) + '\n')
 start_time = time.time()
@@ -194,23 +167,8 @@ blueprint = {'blueprint': blueprint_}
 timing_file.write('Image saving ends in ' + repr(time.time() - start_time) + '\n')
 start_time = time.time()
 
-# test_bp = open('bp-test.txt')
-# test_bp.seek(1)
-# bp_string = test_bp.read()
-# print(bp_string)
-# decoded_bp = decode_base64_and_inflate(bp_string)
-# print(decoded_bp)
-# coded_bp = deflate_and_base64_encode(decoded_bp).decode()
-# print(coded_bp)
-# if coded_bp == bp_string:
-#     print(True)
-# else:
-#     print(False)
-# new_bp_string = '0'+coded_bp
-# print(new_bp_string)
-
 json_data = json.dumps(blueprint, default=lambda o: o.__dict__, indent=4)
-output_JSONfile = open('JSON output.txt', 'w')
+output_JSONfile = open('JSON output_threads.txt', 'w')
 output_JSONfile.write(json_data)
 
 timing_file.write('JSON conversion in ' + repr(time.time() - start_time) + '\n')
@@ -222,6 +180,7 @@ timing_file.write('JSON compressing in ' + repr(time.time() - start_time) + '\n'
 start_time = time.time()
 
 coded_blueprint_string = '0' + coded_json_data
-output_JSONfile.write(coded_blueprint_string)
+output_string = open('output string.txt', 'w')
+output_string.write(coded_blueprint_string)
 
 timing_file.write('String writing in ' + repr(time.time() - start_time) + '\n')
